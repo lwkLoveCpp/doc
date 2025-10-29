@@ -1,0 +1,250 @@
+{
+  "main": {
+    "id": "28e9368af3d0ab73",
+    "type": "split",
+    "children": [
+      {
+        "id": "e9ae67996123f220",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "523fb73205a8acb9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "doc/ssd/论文总结.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "论文总结"
+            }
+          },
+          {
+            "id": "dadec0723d777e5a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "doc/ssd/ssd 调度器总结.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ssd 调度器总结"
+            }
+          },
+          {
+            "id": "2cd260d8a3e40fc0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "doc/ssd/ssd 调度器总结.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ssd 调度器总结"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b406303abb81ae02",
+    "type": "split",
+    "children": [
+      {
+        "id": "40ae2a56209bcdaa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3362669eabf2108a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "ba571fd12996528c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d435221a5fa93e38",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "dc5dc8f965549226",
+    "type": "split",
+    "children": [
+      {
+        "id": "fbd22ffcf2ef76f6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f3027facce8dd0ab",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "shoppee/gitlab访问密钥.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for gitlab访问密钥"
+            }
+          },
+          {
+            "id": "992ce028780976fb",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "shoppee/gitlab访问密钥.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from gitlab访问密钥"
+            }
+          },
+          {
+            "id": "7e22910d41fae61d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d877cd2f4318f42e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "shoppee/gitlab访问密钥.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of gitlab访问密钥"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:Create new base": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "3362669eabf2108a",
+  "lastOpenFiles": [
+    "doc/ssd/论文总结.md",
+    "doc/ssd/ssd 调度器总结.md",
+    "shoppee/配置alert.md",
+    "doc/ssd/idea.md",
+    "doc/ssd/ssd读写代价差异.md",
+    "shoppee/holdout实验.md",
+    "shoppee/abTest的使用.md",
+    "doc/ssd/TLC中cell如何编程表示3bit数据.md",
+    "shoppee/kafka鉴权.md",
+    "shoppee/申请ab Test权限.md",
+    "shoppee/线上日志拉取配置.md",
+    "shoppee/项目架构.md",
+    "shoppee/gitlab访问密钥.md",
+    "doc/ssd/Workload-aware_budget_compensation_scheduling_for_NVMe_solid_state_drives.pdf",
+    "holdout.drawio.png",
+    "截屏2025-09-18 19.29.47.png",
+    "截屏2025-09-18 19.03.07.png",
+    "截屏2025-09-18 19.01.07.png",
+    "doc/mysql索引失效.md",
+    "doc/mysql分库问题.md",
+    "shoppee/protobuf.md",
+    "shoppee/proto序列化出现的问题.md",
+    "shoppee/nvalid reference to runtime.allgs.md",
+    "doc/ssd.zip",
+    "github_ssh.pub",
+    "github_ssh",
+    "README.md",
+    "doc/ssd/多租户固态盘服务质量保障技术综述_文宇鸿.pdf",
+    "doc/ssd/GSSA_A_Resource_Allocation_Scheme_Customized_for_3D_NAND_SSDs.pdf",
+    "doc/ssd/RDA_A_Read-Request_Driven_Adaptive_Allocation_Scheme_for_Improving_SSD_Performance.pdf",
+    "doc/ssd/The_Static_Allocation_is_Not_a_Static_Optimizing_SSD_Address_Allocation_Through_Boosting_Static_Policy.pdf",
+    "doc/ssd/A_512-Gb_3-b_Cell_64-Stacked_WL_3-D-NAND_Flash_Memory.pdf",
+    "doc/ssd/LiveSSD_A_Low-Interference_RAID_Scheme_for_Hardware_Virtualized_SSDs.pdf",
+    "doc/redis底层数据结构实现.md",
+    "doc/分布式锁优化.md",
+    "doc/问题.md",
+    "doc/跳表的优势.md",
+    "doc/锁与条件变量的配合使用.md",
+    "doc/数组与切片的陷阱.md",
+    "doc/函数调用.md",
+    "截屏2025-09-01 19.05.57.png",
+    "截屏2025-09-01 18.56.43.png",
+    "截屏2025-09-01 18.55.48.png",
+    "截屏2025-09-01 18.51.52.png",
+    "截屏2025-09-01 18.51.24.png",
+    "截屏2025-09-01 18.48.41.png"
+  ]
+}
