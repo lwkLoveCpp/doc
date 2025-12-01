@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "doc/ssd/ssd 调度器总结.md",
+                "file": "doc/mysql/乐观锁的实现.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ssd 调度器总结"
+              "title": "乐观锁的实现"
             }
           }
         ],
@@ -198,13 +198,27 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "3362669eabf2108a",
+  "active": "2cd260d8a3e40fc0",
   "lastOpenFiles": [
-    "doc/ssd/论文总结.md",
-    "doc/ssd/ssd 调度器总结.md",
+    "doc/mysql/join与子查询.md",
+    "doc/mysql/乐观锁的实现.md",
+    "doc/mysql/in和exists的区别.md",
+    "doc/mysql/mysql分库问题.md",
+    "doc/mysql/mysql索引失效.md",
+    "doc/k8s/k8s架构.md",
+    "doc/mysql",
+    "截屏2025-11-28 17.55.21.png",
+    "doc/k8s/List-Watch.md",
+    "截屏2025-11-28 17.48.02.png",
+    "doc/k8s",
+    "截屏2025-11-27 19.20.08.png",
     "shoppee/配置alert.md",
+    "shoppee/迁移方案.md",
     "doc/ssd/idea.md",
     "doc/ssd/ssd读写代价差异.md",
+    "doc/ssd/ssd 调度器总结.md",
+    "shoppee/spex本地部署.md",
+    "doc/ssd/论文总结.md",
     "shoppee/holdout实验.md",
     "shoppee/abTest的使用.md",
     "doc/ssd/TLC中cell如何编程表示3bit数据.md",
@@ -218,8 +232,6 @@
     "截屏2025-09-18 19.29.47.png",
     "截屏2025-09-18 19.03.07.png",
     "截屏2025-09-18 19.01.07.png",
-    "doc/mysql索引失效.md",
-    "doc/mysql分库问题.md",
     "shoppee/protobuf.md",
     "shoppee/proto序列化出现的问题.md",
     "shoppee/nvalid reference to runtime.allgs.md",
@@ -231,20 +243,8 @@
     "doc/ssd/GSSA_A_Resource_Allocation_Scheme_Customized_for_3D_NAND_SSDs.pdf",
     "doc/ssd/RDA_A_Read-Request_Driven_Adaptive_Allocation_Scheme_for_Improving_SSD_Performance.pdf",
     "doc/ssd/The_Static_Allocation_is_Not_a_Static_Optimizing_SSD_Address_Allocation_Through_Boosting_Static_Policy.pdf",
-    "doc/ssd/A_512-Gb_3-b_Cell_64-Stacked_WL_3-D-NAND_Flash_Memory.pdf",
-    "doc/ssd/LiveSSD_A_Low-Interference_RAID_Scheme_for_Hardware_Virtualized_SSDs.pdf",
-    "doc/redis底层数据结构实现.md",
-    "doc/分布式锁优化.md",
-    "doc/问题.md",
-    "doc/跳表的优势.md",
-    "doc/锁与条件变量的配合使用.md",
-    "doc/数组与切片的陷阱.md",
-    "doc/函数调用.md",
     "截屏2025-09-01 19.05.57.png",
     "截屏2025-09-01 18.56.43.png",
-    "截屏2025-09-01 18.55.48.png",
-    "截屏2025-09-01 18.51.52.png",
-    "截屏2025-09-01 18.51.24.png",
-    "截屏2025-09-01 18.48.41.png"
+    "截屏2025-09-01 18.55.48.png"
   ]
 }

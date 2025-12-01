@@ -35,9 +35,10 @@ pacman -S socat
 
 启动
 
-|   |
-|---|
-|`socat -d -d -d UNIX-LISTEN:$HOME``/run/spex/spex``.sock,reuseaddr,fork TCP:agent-tcp.spex.``test``.shopee.io:9299`|
+|                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------- |
+| `socat -d -d -d UNIX-LISTEN:$HOME``/run/spex/spex``.sock,reuseaddr,fork TCP:agent-tcp.spex.``test``.shopee.io:9299` |
+|                                                                                                                     |
 
 ## 让 spex agent 感知到 spex socket 地址
 
