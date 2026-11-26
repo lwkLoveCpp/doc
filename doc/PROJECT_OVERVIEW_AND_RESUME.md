@@ -159,3 +159,53 @@
 - 当前对外接口以 `idl/im_gateway_server.proto` 为准，有 `Push`、`CheckBind`、`GetConnections` 三个。
 - 当前出站语义以 `runtime/runtime.go` 和 `im_gateway_dao v0.0.15` 的 `repo/redis/outbound_message_queue.go` 为准，使用 Pub/Sub；旧文档对“队列”的描述并不意味着落盘或有 ACK。
 - 本文仅描述**项目实现能力**，不推断个人所有权、生产部署范围、线上性能或最终业务收益。求职对外版本应按公司保密要求隐去内部服务名、目标地址、客户数据等信息。
+## 问题与答案
+一、8 个几乎必问的问题
+问题	他想听什么	回答要点
+为什么需要网关，Agent 不能直接连平台？	架构抽象能力	平台建连/鉴权/媒体解密/流式协议差异收敛到 channel，Agent 只见统一 InboundMessage；连接生命周期由 runtime 集中管理
+多实例怎么保证同一个 Bot 只有一条连接？	分布式互斥	Redis SET NX 抢租约 + TTL + token 校验；抢不到直接放弃、不重试；周期对账兜底事件丢失。主动补一句：续租/释放是「读 token → 改」，不是原子 CAS，严格意义上仍有窄窗口
+实例挂了多久恢复？	故障模型	正常退出会主动摘实例并释放租约；崩溃则等约 30s 租约过期 + 30s 对账 + 平台建连，不能说「秒级切换」
+分片对账和广播事件是什么关系？	是否真懂自己的设计	分片只限制每实例扫哪些 Spec；绑定事件仍广播给所有实例，所以单事件产生约 N 次 SET NX。这是写放大，也是优化点
+SSE 和 WebSocket 分别用在哪？	概念是否清晰	WS 是网关↔企微/wzq 的渠道长连接；SSE 是网关按消息调用 HTTP Agent 读的流式响应；微信是 HTTP 长轮询；MCP 后端不是流式
+一条消息从进来到回复经过什么？	主链路熟练度	查 Spec.AgentID → 取 backend → MarkMessageSeen 去重 → StreamChat → 每帧 emit → ch.Send → completed 收尾
+主动推送是可靠投递吗？	会不会吹牛	不是。Push 成功只代表 Pub/Sub 发布成功；无订阅者会丢、发送失败只记日志、无 ACK
+并发/容量多少？	数据是否可信	区分本地 mock 压测与生产；讲清「抢租约并发 = 实例数 N」「心跳 ≈ M/5 命令/秒」「单实例事件消费串行」这些可推导口径
+二、按模块的深挖追问
+1. 租约与分布式（最高频、最容易翻车）
+租约 value 里为什么带 token？ 防止 A 的租约过期后被 B 抢走，A 迟到的 Release/Heartbeat 误删或误续 B 的租约。
+心跳周期为什么是 TTL/3？ 留余量容忍网络抖动、GC 停顿；conf/gateway.yaml 里 30s → 10s。追问：GC 停顿超过 30s 会怎样？→ 误判失联、别人接管、可能出现两条平台连接互相踢；平台消息重复靠去重兜底，但连接层已抖动。
+怎么改成严格互斥？ 用 Lua 把「比较 token + SET/DEL」合成原子 CAS；更严格再加 fencing token，防止旧持有者仍向平台发消息。
+HasLease 为什么用 EXISTS 而不是查索引 ZSET？ 进程 kill -9 时索引会残留，只有带 TTL 的 lease key 才能反映真实有效性；ZSET 只用于按 slot 做删除对账。
+广播写放大怎么优化？ 本地按 slotRange() 过滤，或按 slot 分 channel 定向发布。追问「改了之后还一样可靠吗？」→ 不一样：分片变更、实例上下线时的接管时序必须重新设计，仍要靠对账兜底。这个追问最能区分「背方案」和「懂取舍」。
+为什么不用 etcd / ZK / 一致性哈希直接分配 Bot？ 现有方案无中心调度、依赖少、任何活实例都能抢，实现极简；代价是 N 倍写放大、TTL 级恢复时延、非原子续租。要能说出取舍，不要只说「Redis 快」。
+2. 流式协议与渠道差异
+completed 帧不发会怎样？ 这是很好的真实踩坑素材：企微流不会 finish=true；微信缓冲的正文不会 flush；wzq 缺 done 信令会让 CGI 认为会话 busy，直到 5 分钟死信超时。
+企微为什么 50 字节 / 50ms 攒批？ 减少逐 token 平台请求；追问代价：首帧延迟、定时器并发、以及同一 req_id 并发回复时 pending map 互相覆盖导致一个请求等满 15s 超时（前面压测复现过）。
+content_type 与旧协议怎么兼容？ 顶层为空时回退读 metadata["gateway_event_type"]，再由 ResolveFrame / ResolvePart 映射成帧生命周期与内容段。
+raw 透传的价值和风险？ 平台协议未统一时能低侵入接入（wzq 入站全量 raw），代价是网关不做校验、类型安全和内容审计。
+图片为什么由网关解密？ Agent 不需要感知企微 aeskey/AES；追问：大图 base64 的内存与带宽开销、签名 URL 时效、临时文件清理。
+3. Agent 路由与配置
+一致性 hash key 为什么是 GatewayBotId:ChatID？ 会话粘滞；追问扩缩容时 rehash、热点会话怎么办。
+Agent 配置怎么热更新？ 每 60s 整表替换 backend，失败保留旧数据；首次刷新是异步的，所以启动瞬间 backend 可能为空、消息被丢弃——这是常被问到的「你有没有考虑冷启动」。
+换绑 Agent 要重建渠道连接吗？ 不用，Spec.AgentID 每条消息实时查，下一跳就生效。
+超时 / 断流怎么办？ 默认 5min context.WithTimeout；StreamChat 返错补 error 帧。追问：已经发了 10 个 delta 才断流，怎么回滚？→ 目前不能，只能展示半截 + 错误帧，改进要引入整轮幂等与可重放缓冲。
+MCP 和 HTTP backend 差别？ 别说 MCP 是流式：它是 initialize → tools/call 拿完整结果后发 message + completed 两帧。
+4. 可靠性（面试官最爱设陷阱）
+「你们是 exactly-once 吗？」 明确否定。去重标记发生在调用 Agent 之前，Agent 失败后平台重投会被拦；Push 是 Pub/Sub 即发即失；Send 失败只记日志；1 小时前的消息直接丢弃。
+消息可能丢在哪几处？ 无订阅者时发布、订阅重连窗口、Send 失败不重试、进程崩溃、Agent 失败后被去重抑制。
+怎么改成至少一次？ 持久化队列（Redis Stream / BRPOPLPUSH + pending）+ ACK + 幂等键 + 重试退避 + 死信，并把「Push 成功」重新定义。TODO.md 里就是这个方向，但别写成已完成。
+5. 并发与性能
+每条入站消息起一个 goroutine，风险是什么？ 无并发上限，下游慢时 goroutine / SSE 连接 / FD 无界增长；怎么加全局+按 Bot 的 semaphore、超限排队或快速失败。
+稳态 Redis 压力怎么估？ 约 M/10 次心跳/秒，每次 GET+SET → 约 M/5 命令/秒；同批建连的 ticker 会每 10s 惊群；对账是逐个串行 HasLease，且和 20s 实例心跳在同一个 scanLoop 里，大规模扫描会拖慢心跳。
+你的压测数据怎么来的？ 必须主动交代边界：本地 mock SSE Agent / mock 企微 WS / 纯 Go Redis 模拟器，不含真实 Redis、真实平台、真实 LLM。面试官最反感把 mock QPS 说成线上容量。
+6. 排障与可观测
+用户说「发消息没回复」，你怎么查？ 按顺序：该 Bot 是否 HasLease → GetConnections 看本实例连接与 last_active → in. 日志是否到达 → 去重是否命中 → agent/target 日志 → out. 与 SendResult → 平台 ACK / 是否被限流。
+GetConnections 为什么只查本实例？ 提供单实例真实 TCP 连接快照，由 admin 聚合；微信长轮询不计入 WS 连接数。
+多环境怎么隔离？ Agent 的 env_type/env_name 转成北极星 selector-meta-* metadata，走多泳道路由。
+7. 简历真实性 / 开放题
+「这一整套都是你做的吗？你具体负责哪几个文件？」 必须能落到具体模块和函数，别把团队成果揽全。
+「最有价值的一个设计 / 最难的一个 bug？」 建议准备两个：企微流式攒批与 done 信令；同一 req_id 并发覆盖 pending 导致的 15s 超时。
+「如果重做，先改什么？」 租约原子 CAS → 对账与心跳隔离 → 定向事件消除写放大 → Push 可靠投递 → 入站并发闸门。
+「上线出过什么事故？怎么回滚？」 如果没有真实事故，就说「没有线上事故记录，但通过压测/演练发现了 X」，不要编。
+三、60 秒项目陈述模板
+这是一个多渠道智能体消息网关，接企微、微信、微证券三种平台，把用户消息统一成 InboundMessage 路由到 Agent，再把 Agent 的 SSE 增量回复按平台能力发回去。我主要负责（填自己真实模块）。核心难点有两个：一是多实例下每个 Bot 只能有一条连接，用 Redis 租约 + 心跳 + 分片对账实现，代价是广播事件带来 N 倍抢锁写放大，且当前续租/释放不是原子 CAS；二是大模型的高频增量帧和平台能力不匹配，企微做攒批刷流、微信做缓冲、wzq 靠 done 信令收尾。主动推送目前是 Pub/Sub 即发即失，所以我没有把它定义成可靠投递，下一步会做 ACK 和持久化队列。
